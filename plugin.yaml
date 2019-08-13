@@ -1,0 +1,6 @@
+name: "getenv"
+shortDesc: "Get environment variables for specific Pod"
+longDesc: >
+  `kubectl-getenv` gets all the environment variables for the containers that run in the Pod.
+example: "kubectl getenv ngnix-pod -n nginx"
+command: "./kubectl-getenv"
