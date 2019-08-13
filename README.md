@@ -39,5 +39,5 @@ Flags:
 - Get list of environment variables for specific pod:
 
 ```sh
-$ kubectl get env -n nginx nginx-pod
+$ kubectl getenv -n nginx nginx-pod
 ```
