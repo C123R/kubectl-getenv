@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/C123R/kubectl-getenv.svg?branch=master)](https://travis-ci.org/C123R/kubectl-getenv)
+[![Build Status](https://travis-ci.com/C123R/kubectl-getenv.svg?branch=master)](https://travis-ci.com/C123R/kubectl-getenv.svg?branch=master)
 
 # kubectl-getenv
 
