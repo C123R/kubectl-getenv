@@ -152,7 +152,7 @@ func (o *GetEnvOptions) GetEnv() error {
 	return nil
 }
 
-// getSecret will fetch all secrets for provided secret Object
+// getSecret will fetch all secrets for provided secret
 // and adds key-value pair on Global map (listOfEnv)
 func (o *GetEnvOptions) getSecret(secretMap map[string][]string) error {
 
@@ -170,7 +170,7 @@ func (o *GetEnvOptions) getSecret(secretMap map[string][]string) error {
 	return nil
 }
 
-// getConfigMap will fetch all configmap values for provided configMap Object
+// getConfigMap will fetch all configmap values for provided configMap
 // and adds key-value pair Global map (listOfEnv)
 func (o *GetEnvOptions) getConfigMap(configMap map[string][]string) error {
 
