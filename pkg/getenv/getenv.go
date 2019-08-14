@@ -97,26 +97,33 @@ func (o *GetEnvOptions) GetEnv() error {
 
 	for _, container := range pod.Spec.Containers {
 
-		fmt.Printf("============================= %s =============================\n", container.Name)
+		fmt.Printf("# %s\n\n", container.Name)
 		for _, env := range container.Env {
 
-			if env.ValueFrom != nil {
-
-				if env.ValueFrom.ConfigMapKeyRef != nil {
-
-					configMapEnv[env.ValueFrom.ConfigMapKeyRef.LocalObjectReference.Name] = append(configMapEnv[env.ValueFrom.ConfigMapKeyRef.LocalObjectReference.Name], env.ValueFrom.ConfigMapKeyRef.Key)
-
-				} else if env.ValueFrom.SecretKeyRef != nil {
-
-					secretEnv[env.ValueFrom.SecretKeyRef.LocalObjectReference.Name] = append(secretEnv[env.ValueFrom.SecretKeyRef.LocalObjectReference.Name], env.ValueFrom.SecretKeyRef.Key)
-				}
-			} else {
+			if env.ValueFrom == nil {
 
 				// Considering other environment variables are plain text key-value pair
 				// and also Skipping Kubnernetes specific ENV
 				// For example: KUBERNETES_PORT_443_TCP_ADDR
 				if !strings.HasPrefix(env.Name, "KUBERNETES_") {
 					listOfEnv[env.Name] = env.Value
+				}
+
+			} else {
+
+				switch {
+
+				case env.ValueFrom.ConfigMapKeyRef != nil:
+
+					configMapEnv[env.ValueFrom.ConfigMapKeyRef.LocalObjectReference.Name] = append(configMapEnv[env.ValueFrom.ConfigMapKeyRef.LocalObjectReference.Name], env.ValueFrom.ConfigMapKeyRef.Key)
+
+				case env.ValueFrom.SecretKeyRef != nil:
+
+					secretEnv[env.ValueFrom.SecretKeyRef.LocalObjectReference.Name] = append(secretEnv[env.ValueFrom.SecretKeyRef.LocalObjectReference.Name], env.ValueFrom.SecretKeyRef.Key)
+
+				case env.ValueFrom.FieldRef != nil:
+
+					listOfEnv[env.Name] = env.ValueFrom.FieldRef.FieldPath
 				}
 			}
 
@@ -140,11 +147,12 @@ func (o *GetEnvOptions) GetEnv() error {
 				delete(listOfEnv, key)
 			}
 		}
+		fmt.Println()
 	}
 	return nil
 }
 
-// getSecret will fetch all secrets for provided secret Object
+// getSecret will fetch all secrets for provided secret
 // and adds key-value pair on Global map (listOfEnv)
 func (o *GetEnvOptions) getSecret(secretMap map[string][]string) error {
 
@@ -162,7 +170,7 @@ func (o *GetEnvOptions) getSecret(secretMap map[string][]string) error {
 	return nil
 }
 
-// getConfigMap will fetch all configmap values for provided configMap Object
+// getConfigMap will fetch all configmap values for provided configMap
 // and adds key-value pair Global map (listOfEnv)
 func (o *GetEnvOptions) getConfigMap(configMap map[string][]string) error {
 
